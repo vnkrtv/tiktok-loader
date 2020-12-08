@@ -1,1 +1,1 @@
-# TikTok loader
+# tiktok-loader

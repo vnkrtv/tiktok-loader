@@ -56,6 +56,45 @@ class TikTokStorage(PostgresStorage):
             tiktoker['following_count']]
         self.exec(sql=sql, params=params)
 
+    def add_music(self, music: dict):
+        sql = '''
+            INSERT INTO 
+                music (music_id, author_name, title, play_url, duration, album) 
+            VALUES 
+                (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (music_id)
+                DO NOTHING'''
+        params = [
+            music['music_id'],
+            music['author_name'],
+            music['title'],
+            music['play_url'],
+            music['duration'],
+            music['album']]
+        self.exec(sql=sql, params=params)
+
+    def add_video(self, video: dict):
+        sql = '''
+            INSERT INTO 
+                videos (video_id, height, width, ratio, cover, author_name,
+                        title, play_url, duration, album) 
+            VALUES 
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (video_id)
+                DO NOTHING'''
+        params = [
+            video['video_id'],
+            video['height'],
+            video['width'],
+            video['ratio'],
+            video['cover'],
+            video['author_name'],
+            video['title'],
+            video['play_url'],
+            video['duration'],
+            video['album']]
+        self.exec(sql=sql, params=params)
+
     def add_tiktok(self, tiktok: dict):
         sql = '''
             INSERT INTO 
@@ -63,7 +102,7 @@ class TikTokStorage(PostgresStorage):
                           digg_count, share_count, comment_count, play_count, is_ad) 
             VALUES 
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (tiktocker_id)
+            ON CONFLICT (tiktok_id)
                 DO UPDATE SET
                     digg_count = EXCLUDED.digg_count,
                     share_count = EXCLUDED.share_count,
@@ -83,47 +122,44 @@ class TikTokStorage(PostgresStorage):
             tiktok['is_ad']]
         self.exec(sql=sql, params=params)
 
-    def get_posts(self,
-                  count: int = 0,
-                  habs_list: list = None,
-                  tags_list: list = None) -> Generator:
-        if not habs_list and not tags_list:
-            cursor = self.conn.cursor()
-            sql = 'SELECT * FROM posts'
-            if count:
-                sql += ' LIMIT %d' % count
-            cursor.execute(sql)
-            return (post for post in cursor.fetchall())
-        elif habs_list:
-            return self.__get_posts_by_habs(count, habs_list)
-        elif tags_list:
-            return self.__get_posts_by_tags(count, tags_list)
+    def __get_all(self, table_name: str, count: int = 0) -> Generator:
+        sql = f'SELECT * FROM {table_name}'
+        if count != 0:
+            sql += f' LIMIT {count}'
+        return self.exec(sql=sql, params=[])
 
-    def get_posts_texts(self,
-                        count: int = 0,
-                        habs_list: list = None,
-                        tags_list: list = None) -> Generator:
-        posts_texts_gen = (post[2] for post in self.get_posts(count, habs_list, tags_list))
-        return posts_texts_gen
+    def get_all_tiktokers(self, count: int = 0) -> Generator:
+        return self.__get_all(table_name='tiktokers', count=count)
 
-    def __get_posts_by_habs(self,
-                            count: int,
-                            habs_list: list) -> Generator:
-        sql = '''SELECT P.* 
-                   FROM posts P JOIN habs H ON P.post_id = H.post_id
-                  WHERE H.hab in (%s)''' % ''.join(["'" + str(hab) + "', " for hab in habs_list])[:-2]
-        sql = sql + " LIMIT %d" % count if count > 0 else sql
-        cursor = self.conn.cursor()
-        cursor.execute(sql)
-        return (post for post in cursor.fetchall())
+    def get_all_tiktoks(self, count: int = 0) -> Generator:
+        return self.__get_all(table_name='tiktoks', count=count)
 
-    def __get_posts_by_tags(self,
-                            count: int,
-                            tags_list: list) -> Generator:
-        sql = '''SELECT P.* 
-                   FROM posts P JOIN tags T ON P.post_id = T.post_id
-                  WHERE T.tag in (%s)''' % ''.join(["'" + str(tag) + "', " for tag in tags_list])[:-2]
-        sql = sql + " LIMIT %d" % count if count > 0 else sql
-        cursor = self.conn.cursor()
-        cursor.execute(sql)
-        return (post for post in cursor.fetchall())
+    def get_all_videos(self, count: int = 0) -> Generator:
+        return self.__get_all(table_name='videos', count=count)
+
+    def get_all_music(self, count: int = 0) -> Generator:
+        return self.__get_all(table_name='music', count=count)
+
+    def get_ticktoker(self, ticktoker_id: int = None, nickname: str = None) -> tuple:
+        sql = f'SELECT * FROM ticktoker'
+        if ticktoker_id:
+            sql += f' WHERE ticktoker_id={ticktoker_id}'
+        elif nickname:
+            sql += f' WHERE nickname={nickname}'
+        return next(self.exec(sql=sql, params=[]))
+
+    def get_ticktoks(self, ticktok_id: int = None, author_id: int = None) -> Generator:
+        sql = f'SELECT * FROM ticktoks'
+        if ticktok_id:
+            sql += f' WHERE ticktok_id={ticktok_id}'
+        elif author_id:
+            sql += f' WHERE author_id={author_id}'
+        return self.exec(sql=sql, params=[])
+
+    def get_music(self, music_id: int) -> tuple:
+        sql = f'SELECT * FROM music WHERE music_id={music_id}'
+        return next(self.exec(sql=sql, params=[]))
+
+    def get_video(self, video_id: int) -> tuple:
+        sql = f'SELECT * FROM videos WHERE video_id={video_id}'
+        return next(self.exec(sql=sql, params=[]))
