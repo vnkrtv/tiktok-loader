@@ -13,6 +13,10 @@ CREATE TABLE IF NOT EXISTS tiktockers
         not null,
     followers_count int8,
     following_count int8,
+    heart           int8,
+    heart_count     int8,
+    video_count     int8,
+    digg_count      int8,
 
     constraint pk_users primary key (tiktocker_id)
 );
@@ -34,11 +38,8 @@ CREATE TABLE IF NOT EXISTS videos
     width       int4,
     ratio       text,
     cover       text,
-    author_name text,
-    title       text,
     play_url    text,
     duration    int4,
-    album       text
 );
 
 CREATE TABLE IF NOT EXISTS tiktocks
