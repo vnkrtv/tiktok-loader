@@ -91,15 +91,33 @@ class TikTikLoader:
             music = self.__get_music(tiktok)
             video = self.__get_video(tiktok)
             tiktoks.append({
-
+                'tiktok_id': tiktok['id'],
+                'create_time': datetime.fromtimestamp(tiktok['createTime']),
+                'description': tiktok['desc'],
+                'author_id': tiktok['author']['id'],
+                'is_ad': tiktok['isAd'],
+                'video_id': video['id'],
+                'music_id': music['id'],
+                'digg_count': tiktok['stats']['diggCount'],
+                'share_count': tiktok['stats']['shareCount'],
+                'comment_count': tiktok['stats']['commentCount'],
+                'play_count': tiktok['stats']['playCount']
             })
             audios.append(music)
             videos.append(video)
         return tiktoks, audios, videos
 
-    def get_user(self, username: str) -> dict:
+    def load_user(self, username: str) -> dict:
         user_dict = self.api.getUser(username=username,
                                      custom_verifyFp='',
                                      proxy=self.__get_proxy())
-        user_tiktoks = user_dict['items']
-        user_info = user_dict['userInfo']
+        tiktoker = self.__get_tiktoker(user_dict)
+        tiktoks, audios, videos = self.__get_tiktoks(user_dict)
+
+        self.db.add_tiktoker(tiktoker)
+        for tiktok in tiktoks:
+            self.db.add_tiktok(tiktok)
+        for music in audios:
+            self.db.add_music(music)
+        for video in videos:
+            self.db.add_video(video)

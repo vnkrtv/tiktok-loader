@@ -1,7 +1,7 @@
 DB_SCHEMA = '''
 CREATE TABLE IF NOT EXISTS tiktockers
 (
-    tiktocker_id    int8,
+    tiktocker_id    text,
     sec_uid         text
         not null,
     unique_id       text
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tiktockers
 
 CREATE TABLE IF NOT EXISTS music
 (
-    music_id    int8,
+    music_id    text,
     author_name text,
     title       text,
     play_url    text,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS videos
 
 CREATE TABLE IF NOT EXISTS tiktocks
 (
-    tiktok_id     int8,
+    tiktok_id     text,
     create_time   timestamp
         not null,
     description   text,
