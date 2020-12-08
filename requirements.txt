@@ -1,3 +1,5 @@
+beautifulsoup4==4.9.3
+bs4==0.0.1
 certifi==2020.11.8
 chardet==3.0.4
 greenlet==1.0a1
@@ -8,6 +10,7 @@ pyee==8.1.0
 requests==2.25.0
 selenium==3.141.0
 selenium-stealth==1.0.6
+soupsieve==2.0.1
 TikTokApi==3.8.3
 typing-extensions==3.7.4.3
 urllib3==1.26.2

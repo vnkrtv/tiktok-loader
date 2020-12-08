@@ -8,6 +8,8 @@ services:
       - POSTGRES_DB=tiktok
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+    ports:
+    - "0.0.0.0:25432:5432"
   loader:
     build: .
     image: tiktok-loader
