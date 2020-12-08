@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS tiktoks
     play_count    int8,
     is_ad         boolean,
     
-    constraint pk_tiktok primary key (video_id),
+    constraint pk_tiktok primary key (tiktok_id),
 
     constraint fk_author foreign key (author_id)
         references tiktokers (tiktoker_id)
