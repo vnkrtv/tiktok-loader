@@ -27,7 +27,7 @@ def get_top_tiktokers(count: int = 1000) -> list:
     return tiktokers[:count]
 
 
-class TikTikLoader:
+class TikTokLoader:
     api: TikTokApi
     db: TikTokStorage
     proxies: list

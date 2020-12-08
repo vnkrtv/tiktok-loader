@@ -3,7 +3,7 @@ import time
 import random
 
 from src.postgres import TikTokStorage
-from src.loader import TikTikLoader, get_top_tiktokers
+from src.loader import TikTokLoader, get_top_tiktokers
 from src.proxy import PROXIES
 
 PG_HOST = os.getenv('PG_HOST', 'postgres')
@@ -26,7 +26,7 @@ def main():
     top_tiktokers = get_top_tiktokers(count=TIKTOKERS_COUNT)
     nicknames = [tiktoker['nickname'] for tiktoker in top_tiktokers]
 
-    loader = TikTikLoader(db=db,
+    loader = TikTokLoader(db=db,
                           proxies=PROXIES,
                           timeout=TIMEOUT)
     while True:
