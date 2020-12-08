@@ -1,7 +1,7 @@
 DB_SCHEMA = '''
-CREATE TABLE IF NOT EXISTS tiktockers
+CREATE TABLE IF NOT EXISTS tiktokers
 (
-    tiktocker_id    text,
+    tiktoker_id    text,
     sec_uid         text
         not null,
     unique_id       text
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS tiktockers
     video_count     int8,
     digg_count      int8,
 
-    constraint pk_users primary key (tiktocker_id)
+    constraint pk_users primary key (tiktoker_id)
 );
 
 CREATE TABLE IF NOT EXISTS music
@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS music
     title       text,
     play_url    text,
     duration    int4,
-    album       text
+    album       text,
+    
+    constraint pk_music primary key (music_id)
 );
 
 CREATE TABLE IF NOT EXISTS videos
@@ -39,33 +41,39 @@ CREATE TABLE IF NOT EXISTS videos
     ratio       text,
     cover       text,
     play_url    text,
-    duration    int4
+    duration    int4,
+    
+    constraint pk_video primary key (video_id)
 );
 
-CREATE TABLE IF NOT EXISTS tiktocks
+CREATE TABLE IF NOT EXISTS tiktoks
 (
     tiktok_id     text,
     create_time   timestamp
         not null,
     description   text,
-    author_id     int8
+    author_id     text
         not null,
     video_id      text,
-    music_id      int8,
+    music_id      text,
     digg_count    int8,
     share_count   int8,
     comment_count int8,
     play_count    int8,
     is_ad         boolean,
+    
+    constraint pk_tiktok primary key (video_id),
 
     constraint fk_author foreign key (author_id)
-        references tiktockers (tiktocker_id)
+        references tiktokers (tiktoker_id)
         on delete set null
         on update cascade,
+        
     constraint fk_music foreign key (music_id)
         references music (music_id)
         on delete set null
         on update cascade,
+        
     constraint fk_video foreign key (video_id)
         references videos (video_id)
         on delete set null

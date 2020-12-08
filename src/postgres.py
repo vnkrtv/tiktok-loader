@@ -44,7 +44,7 @@ class TikTokStorage(PostgresStorage):
     def add_tiktoker(self, tiktoker: dict):
         sql = '''
             INSERT INTO 
-                tiktockers (tiktocker_id, sec_uid, unique_id, nickname, create_time, followers_count, 
+                tiktokers (tiktoker_id, sec_uid, unique_id, nickname, create_time, followers_count, 
                 following_count, heart, heart_count, video_count, digg_count) 
             VALUES 
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -57,7 +57,7 @@ class TikTokStorage(PostgresStorage):
                     videoCount=EXCLUDED.video_count,
                     diggCount=EXCLUDED.digg_count'''
         params = [
-            tiktoker['tiktocker_id'],
+            tiktoker['tiktoker_id'],
             tiktoker['sec_uid'],
             tiktoker['unique_id'],
             tiktoker['nickname'],
@@ -108,7 +108,7 @@ class TikTokStorage(PostgresStorage):
     def add_tiktok(self, tiktok: dict):
         sql = '''
             INSERT INTO 
-                tiktocks (tiktok_id, create_time, description, author_id, video_id, music_id, 
+                tiktoks (tiktok_id, create_time, description, author_id, video_id, music_id, 
                           digg_count, share_count, comment_count, play_count, is_ad) 
             VALUES 
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -151,17 +151,17 @@ class TikTokStorage(PostgresStorage):
         return self.__get_all(table_name='music', count=count)
 
     def get_ticktoker(self, ticktoker_id: int = None, nickname: str = None) -> tuple:
-        sql = f'SELECT * FROM ticktoker'
+        sql = f'SELECT * FROM tiktokers'
         if ticktoker_id:
-            sql += f' WHERE ticktoker_id={ticktoker_id}'
+            sql += f' WHERE tiktoker_id={ticktoker_id}'
         elif nickname:
             sql += f' WHERE nickname={nickname}'
         return next(self.exec(sql=sql, params=[]))
 
     def get_ticktoks(self, ticktok_id: int = None, author_id: int = None) -> Generator:
-        sql = f'SELECT * FROM ticktoks'
+        sql = f'SELECT * FROM tiktoks'
         if ticktok_id:
-            sql += f' WHERE ticktok_id={ticktok_id}'
+            sql += f' WHERE tiktok_id={ticktok_id}'
         elif author_id:
             sql += f' WHERE author_id={author_id}'
         return self.exec(sql=sql, params=[])

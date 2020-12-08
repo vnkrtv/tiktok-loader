@@ -52,7 +52,7 @@ class TikTikLoader:
     def __get_tiktoker(self, user_dict: dict) -> dict:
         user_info = user_dict['userInfo']
         tiktoker = {
-            'tiktocker_id': user_info['user']['id'],
+            'tiktoker_id': user_info['user']['id'],
             'sec_uid': user_info['user']['secUid'],
             'unique_id': user_info['user']['uniqueId'],
             'nickname': user_info['user']['nickname'],
