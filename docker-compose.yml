@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: tiktok-postgres
+    environment:
+      - POSTGRES_DB=tiktok
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+  loader:
+    build: .
+    image: tiktok-loader
+    container_name: tiktok-loader
+    environment:
+      - PG_HOST=db
+      - PG_PORT=5432
+      - PG_NAME=tiktok
+      - PG_USER=postgres
+      - PG_PASS=password
+      - TIMEOUT=1
+      - TIKTOKERS_COUNT=1000
+    depends_on:
+      - db
