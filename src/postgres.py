@@ -30,7 +30,10 @@ class PostgresStorage:
         cursor = self.conn.cursor()
         cursor.execute(sql, params)
         self.conn.commit()
-        return cursor.fetchall()
+        try:
+            return cursor.fetchall()
+        except psycopg2.ProgrammingError:
+            pass
 
 
 class TikTokStorage(PostgresStorage):
