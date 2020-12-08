@@ -17,7 +17,7 @@ def get_top_tiktokers(count: int = 1000) -> list:
     tiktokers = []
     for p in range(1, pages_count + 1):
         page = requests.get(href.format(p)).content
-        soup = BeautifulSoup(page, 'lxml')
+        soup = BeautifulSoup(page, 'html.parser')
         for td in soup.find_all('td', attrs={'class': 'name'}):
             buf = td.find('a').text.split('[')
             tiktokers.append({
