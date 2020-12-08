@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS videos
     ratio       text,
     cover       text,
     play_url    text,
-    duration    int4,
+    duration    int4
 );
 
 CREATE TABLE IF NOT EXISTS tiktocks
