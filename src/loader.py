@@ -1,5 +1,6 @@
 import math
 import random
+import time
 from datetime import datetime
 
 import requests
@@ -38,8 +39,15 @@ class TikTikLoader:
         self.proxies = proxies
         self.timeout = timeout
 
+        self.proxies_indexes = set(range(len(proxies)))
+
     def __get_proxy(self) -> str:
-        return random.choice(self.proxies)
+        if len(self.proxies_indexes) == 0:
+            self.proxies_indexes = set(range(len(self.proxies)))
+
+        index = random.choice(self.proxies_indexes)
+        self.proxies_indexes.remove(index)
+        return self.proxies[index]
 
     def __get_tiktoker(self, user_dict: dict) -> dict:
         user_info = user_dict['userInfo']
@@ -107,8 +115,8 @@ class TikTikLoader:
             videos.append(video)
         return tiktoks, audios, videos
 
-    def load_user(self, username: str) -> dict:
-        user_dict = self.api.getUser(username=username,
+    def load_user(self, nickname: str):
+        user_dict = self.api.getUser(username=nickname,
                                      custom_verifyFp='',
                                      proxy=self.__get_proxy())
         tiktoker = self.__get_tiktoker(user_dict)
@@ -121,3 +129,12 @@ class TikTikLoader:
             self.db.add_music(music)
         for video in videos:
             self.db.add_video(video)
+
+    def load_users(self, nicknames_list: list):
+        counter = 0
+        for nickname in nicknames_list:
+            self.load_user(nickname)
+            counter += 1
+            time.sleep(self.timeout + random.random())
+            if counter % len(self.proxies) == 0:
+                time.sleep(self.timeout * 600 + random.random())
