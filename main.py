@@ -11,8 +11,8 @@ PG_PORT = os.getenv('PG_PORT', 5432)
 PG_NAME = os.getenv('PG_NAME', 'tiktok')
 PG_USER = os.getenv('PG_USER', 'postgres')
 PG_PASS = os.getenv('PG_PASS', 'password')
-TIMEOUT = os.getenv('TIMEOUT', 1)
-TIKTOKERS_COUNT = os.getenv('TIKTOKERS_COUNT', 1000)
+TIMEOUT = float(os.getenv('TIMEOUT', 1))
+TIKTOKERS_COUNT = int(os.getenv('TIKTOKERS_COUNT', 1000))
 
 
 def main():
