@@ -73,8 +73,8 @@ class TikTokLoader:
             'author_name': music_dict['authorName'],
             'title': music_dict['title'],
             'play_url': music_dict['playUrl'],
-            'duration': music_dict['id'],
-            'album': music_dict['id']
+            'duration': music_dict['duration'],
+            'album': music_dict['album']
         }
         return music
 
