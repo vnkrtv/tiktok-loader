@@ -70,9 +70,9 @@ class TikTokLoader:
         music_dict = tiktic_dict['music']
         music = {
             'music_id': music_dict['id'],
-            'authorName': music_dict['id'],
-            'title': music_dict['id'],
-            'playUrl': music_dict['id'],
+            'author_name': music_dict['authorName'],
+            'title': music_dict['title'],
+            'play_url': music_dict['playUrl'],
             'duration': music_dict['id'],
             'album': music_dict['id']
         }
