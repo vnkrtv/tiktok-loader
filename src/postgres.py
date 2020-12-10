@@ -51,14 +51,14 @@ class TikTokStorage(PostgresStorage):
                 following_count, heart, heart_count, video_count, digg_count) 
             VALUES 
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (tiktocker_id)
+            ON CONFLICT (tiktoker_id)
                 DO UPDATE SET
                     followers_count = EXCLUDED.followers_count,
                     following_count = EXCLUDED.following_count,
                     heart=EXCLUDED.heart,
-                    heartCount=EXCLUDED.heart_count,
-                    videoCount=EXCLUDED.video_count,
-                    diggCount=EXCLUDED.digg_count'''
+                    heart_count=EXCLUDED.heart_count,
+                    video_count=EXCLUDED.video_count,
+                    digg_count=EXCLUDED.digg_count'''
         params = [
             tiktoker['tiktoker_id'],
             tiktoker['sec_uid'],
@@ -93,9 +93,9 @@ class TikTokStorage(PostgresStorage):
     def add_video(self, video: dict):
         sql = '''
             INSERT INTO 
-                videos (video_id, height, width, ratio, cover, play_url, duration) 
+                videos (video_id, height, width, ratio, cover, duration) 
             VALUES 
-                (%s, %s, %s, %s, %s, %s, %s)
+                (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (video_id)
                 DO NOTHING'''
         params = [
@@ -104,7 +104,6 @@ class TikTokStorage(PostgresStorage):
             video['width'],
             video['ratio'],
             video['cover'],
-            video['play_url'],
             video['duration']]
         self.exec(sql=sql, params=params)
 

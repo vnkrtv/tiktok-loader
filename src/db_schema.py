@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS videos
     width       int4,
     ratio       text,
     cover       text,
-    play_url    text,
     duration    int4,
     
     constraint pk_video primary key (video_id)

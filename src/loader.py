@@ -45,7 +45,7 @@ class TikTokLoader:
         if len(self.proxies_indexes) == 0:
             self.proxies_indexes = set(range(len(self.proxies)))
 
-        index = random.choice(self.proxies_indexes)
+        index = random.choice(list(self.proxies_indexes))
         self.proxies_indexes.remove(index)
         return self.proxies[index]
 
@@ -86,7 +86,6 @@ class TikTokLoader:
             'width': video_dict['width'],
             'ratio': video_dict['ratio'],
             'cover': video_dict['cover'],
-            'play_url': video_dict['playUrl'],
             'duration': video_dict['duration'],
         }
         return video
@@ -104,8 +103,8 @@ class TikTokLoader:
                 'description': tiktok['desc'],
                 'author_id': tiktok['author']['id'],
                 'is_ad': tiktok['isAd'],
-                'video_id': video['id'],
-                'music_id': music['id'],
+                'video_id': video['video_id'],
+                'music_id': music['music_id'],
                 'digg_count': tiktok['stats']['diggCount'],
                 'share_count': tiktok['stats']['shareCount'],
                 'comment_count': tiktok['stats']['commentCount'],
@@ -123,12 +122,13 @@ class TikTokLoader:
         tiktoks, audios, videos = self.__get_tiktoks(user_dict)
 
         self.db.add_tiktoker(tiktoker)
-        for tiktok in tiktoks:
-            self.db.add_tiktok(tiktok)
         for music in audios:
             self.db.add_music(music)
         for video in videos:
             self.db.add_video(video)
+        for tiktok in tiktoks:
+            self.db.add_tiktok(tiktok)
+        print(f'Loaded @{tiktoker["nickname"]} info: {len(tiktoks)} tiktoks')
 
     def load_users(self, nicknames_list: list):
         counter = 0
