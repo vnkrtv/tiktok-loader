@@ -31,7 +31,10 @@ def main():
                           timeout=TIMEOUT)
     while True:
         for nickname in nicknames:
-            loader.load_user(nickname)
+            try:
+                loader.load_user(nickname)
+            except Exception as e:
+                print(e)
             time.sleep(TIMEOUT + random.random())
 
 
