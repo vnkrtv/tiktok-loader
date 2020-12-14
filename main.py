@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import logging
 
 from src.postgres import TikTokStorage
 from src.loader import TikTokLoader, get_top_tiktokers
@@ -25,6 +26,7 @@ def main():
 
     top_tiktokers = get_top_tiktokers(count=TIKTOKERS_COUNT)
     nicknames = [tiktoker['nickname'] for tiktoker in top_tiktokers]
+    logging.info('Get %d tiktokers nicknames' % len(top_tiktokers))
 
     loader = TikTokLoader(db=db,
                           proxies=PROXIES,
@@ -34,7 +36,7 @@ def main():
             try:
                 loader.load_user(nickname)
             except Exception as e:
-                print(e)
+                logging.error(e)
             time.sleep(TIMEOUT + random.random())
 
 

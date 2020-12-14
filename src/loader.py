@@ -1,6 +1,7 @@
 import math
 import random
 import time
+import logging
 from datetime import datetime
 
 import requests
@@ -15,15 +16,18 @@ def get_top_tiktokers(count: int = 1000) -> list:
     href = 'https://www.t30p.ru/TikTok.aspx?p={}&order=0'
     pages_count = math.ceil(count / users_on_page)
     tiktokers = []
-    for p in range(1, pages_count + 1):
-        page = requests.get(href.format(p)).content
-        soup = BeautifulSoup(page, 'html.parser')
-        for td in soup.find_all('td', attrs={'class': 'name'}):
-            buf = td.find('a').text.split('[')
-            tiktokers.append({
-                'fullname': buf[0].strip(),
-                'nickname': buf[1][:-1]
-            })
+    try:
+        for p in range(1, pages_count + 1):
+            page = requests.get(href.format(p)).content
+            soup = BeautifulSoup(page, 'html.parser')
+            for td in soup.find_all('td', attrs={'class': 'name'}):
+                buf = td.find('a').text.split('[')
+                tiktokers.append({
+                    'fullname': buf[0].strip(),
+                    'nickname': buf[1][:-1]
+                })
+    except Exception as e:
+        logging.error(e)
     return tiktokers[:count]
 
 
@@ -128,13 +132,8 @@ class TikTokLoader:
             self.db.add_video(video)
         for tiktok in tiktoks:
             self.db.add_tiktok(tiktok)
-        print(f'Loaded @{tiktoker["nickname"]} info: {len(tiktoks)} tiktoks')
 
-    def load_users(self, nicknames_list: list):
-        counter = 0
-        for nickname in nicknames_list:
-            self.load_user(nickname)
-            counter += 1
-            time.sleep(self.timeout + random.random())
-            if counter % len(self.proxies) == 0:
-                time.sleep(self.timeout * 600 + random.random())
+        logging.error('Loaded %s(@%s) info:' % (tiktoker["nickname"], tiktoker["unique_id"]))
+        logging.error('- %d tiktoks', len(tiktoks))
+        logging.error('- %d audios', len(audios))
+        logging.error('- %d video\n', len(videos))
